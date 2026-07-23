@@ -1,0 +1,314 @@
+{
+  "storm_name": "invest92w",
+  "field": "wind_ms",
+  "frames": [
+    {
+      "lead_hours": 6,
+      "time": "2026-07-23T06:00:00",
+      "file": "invest92w_ft_wind_field/t006h.png",
+      "bounds": {
+        "south": 9.0,
+        "north": 25.0,
+        "west": 120.25,
+        "east": 136.25
+      }
+    },
+    {
+      "lead_hours": 12,
+      "time": "2026-07-23T12:00:00",
+      "file": "invest92w_ft_wind_field/t012h.png",
+      "bounds": {
+        "south": 9.5,
+        "north": 25.5,
+        "west": 118.25,
+        "east": 134.25
+      }
+    },
+    {
+      "lead_hours": 18,
+      "time": "2026-07-23T18:00:00",
+      "file": "invest92w_ft_wind_field/t018h.png",
+      "bounds": {
+        "south": 9.75,
+        "north": 25.75,
+        "west": 116.75,
+        "east": 132.75
+      }
+    },
+    {
+      "lead_hours": 24,
+      "time": "2026-07-24T00:00:00",
+      "file": "invest92w_ft_wind_field/t024h.png",
+      "bounds": {
+        "south": 10.5,
+        "north": 26.5,
+        "west": 115.25,
+        "east": 131.25
+      }
+    },
+    {
+      "lead_hours": 30,
+      "time": "2026-07-24T06:00:00",
+      "file": "invest92w_ft_wind_field/t030h.png",
+      "bounds": {
+        "south": 11.25,
+        "north": 27.25,
+        "west": 114.0,
+        "east": 130.0
+      }
+    },
+    {
+      "lead_hours": 36,
+      "time": "2026-07-24T12:00:00",
+      "file": "invest92w_ft_wind_field/t036h.png",
+      "bounds": {
+        "south": 11.75,
+        "north": 27.75,
+        "west": 112.5,
+        "east": 128.5
+      }
+    },
+    {
+      "lead_hours": 42,
+      "time": "2026-07-24T18:00:00",
+      "file": "invest92w_ft_wind_field/t042h.png",
+      "bounds": {
+        "south": 12.5,
+        "north": 28.5,
+        "west": 111.25,
+        "east": 127.25
+      }
+    },
+    {
+      "lead_hours": 48,
+      "time": "2026-07-25T00:00:00",
+      "file": "invest92w_ft_wind_field/t048h.png",
+      "bounds": {
+        "south": 13.0,
+        "north": 29.0,
+        "west": 110.25,
+        "east": 126.25
+      }
+    },
+    {
+      "lead_hours": 54,
+      "time": "2026-07-25T06:00:00",
+      "file": "invest92w_ft_wind_field/t054h.png",
+      "bounds": {
+        "south": 14.0,
+        "north": 30.0,
+        "west": 109.25,
+        "east": 125.25
+      }
+    },
+    {
+      "lead_hours": 60,
+      "time": "2026-07-25T12:00:00",
+      "file": "invest92w_ft_wind_field/t060h.png",
+      "bounds": {
+        "south": 14.5,
+        "north": 30.5,
+        "west": 108.5,
+        "east": 124.5
+      }
+    },
+    {
+      "lead_hours": 66,
+      "time": "2026-07-25T18:00:00",
+      "file": "invest92w_ft_wind_field/t066h.png",
+      "bounds": {
+        "south": 15.5,
+        "north": 31.5,
+        "west": 107.75,
+        "east": 123.75
+      }
+    },
+    {
+      "lead_hours": 72,
+      "time": "2026-07-26T00:00:00",
+      "file": "invest92w_ft_wind_field/t072h.png",
+      "bounds": {
+        "south": 16.25,
+        "north": 32.25,
+        "west": 107.25,
+        "east": 123.25
+      }
+    },
+    {
+      "lead_hours": 78,
+      "time": "2026-07-26T06:00:00",
+      "file": "invest92w_ft_wind_field/t078h.png",
+      "bounds": {
+        "south": 17.25,
+        "north": 33.25,
+        "west": 107.0,
+        "east": 123.0
+      }
+    },
+    {
+      "lead_hours": 84,
+      "time": "2026-07-26T12:00:00",
+      "file": "invest92w_ft_wind_field/t084h.png",
+      "bounds": {
+        "south": 18.25,
+        "north": 34.25,
+        "west": 107.0,
+        "east": 123.0
+      }
+    },
+    {
+      "lead_hours": 90,
+      "time": "2026-07-26T18:00:00",
+      "file": "invest92w_ft_wind_field/t090h.png",
+      "bounds": {
+        "south": 19.5,
+        "north": 35.5,
+        "west": 106.75,
+        "east": 122.75
+      }
+    },
+    {
+      "lead_hours": 96,
+      "time": "2026-07-27T00:00:00",
+      "file": "invest92w_ft_wind_field/t096h.png",
+      "bounds": {
+        "south": 20.75,
+        "north": 36.75,
+        "west": 106.75,
+        "east": 122.75
+      }
+    },
+    {
+      "lead_hours": 102,
+      "time": "2026-07-27T06:00:00",
+      "file": "invest92w_ft_wind_field/t102h.png",
+      "bounds": {
+        "south": 22.0,
+        "north": 38.0,
+        "west": 106.5,
+        "east": 122.5
+      }
+    },
+    {
+      "lead_hours": 108,
+      "time": "2026-07-27T12:00:00",
+      "file": "invest92w_ft_wind_field/t108h.png",
+      "bounds": {
+        "south": 23.0,
+        "north": 39.0,
+        "west": 106.25,
+        "east": 122.25
+      }
+    },
+    {
+      "lead_hours": 114,
+      "time": "2026-07-27T18:00:00",
+      "file": "invest92w_ft_wind_field/t114h.png",
+      "bounds": {
+        "south": 24.25,
+        "north": 40.25,
+        "west": 106.25,
+        "east": 122.25
+      }
+    },
+    {
+      "lead_hours": 120,
+      "time": "2026-07-28T00:00:00",
+      "file": "invest92w_ft_wind_field/t120h.png",
+      "bounds": {
+        "south": 25.25,
+        "north": 41.25,
+        "west": 106.25,
+        "east": 122.25
+      }
+    },
+    {
+      "lead_hours": 126,
+      "time": "2026-07-28T06:00:00",
+      "file": "invest92w_ft_wind_field/t126h.png",
+      "bounds": {
+        "south": 26.25,
+        "north": 42.25,
+        "west": 106.25,
+        "east": 122.25
+      }
+    },
+    {
+      "lead_hours": 132,
+      "time": "2026-07-28T12:00:00",
+      "file": "invest92w_ft_wind_field/t132h.png",
+      "bounds": {
+        "south": 27.0,
+        "north": 43.0,
+        "west": 106.25,
+        "east": 122.25
+      }
+    },
+    {
+      "lead_hours": 138,
+      "time": "2026-07-28T18:00:00",
+      "file": "invest92w_ft_wind_field/t138h.png",
+      "bounds": {
+        "south": 28.5,
+        "north": 44.25,
+        "west": 106.25,
+        "east": 122.0
+      }
+    },
+    {
+      "lead_hours": 144,
+      "time": "2026-07-29T00:00:00",
+      "file": "invest92w_ft_wind_field/t144h.png",
+      "bounds": {
+        "south": 29.5,
+        "north": 45.25,
+        "west": 106.0,
+        "east": 121.75
+      }
+    },
+    {
+      "lead_hours": 150,
+      "time": "2026-07-29T06:00:00",
+      "file": "invest92w_ft_wind_field/t150h.png",
+      "bounds": {
+        "south": 30.5,
+        "north": 46.25,
+        "west": 106.0,
+        "east": 121.75
+      }
+    },
+    {
+      "lead_hours": 156,
+      "time": "2026-07-29T12:00:00",
+      "file": "invest92w_ft_wind_field/t156h.png",
+      "bounds": {
+        "south": 31.5,
+        "north": 47.25,
+        "west": 106.0,
+        "east": 121.75
+      }
+    },
+    {
+      "lead_hours": 162,
+      "time": "2026-07-29T18:00:00",
+      "file": "invest92w_ft_wind_field/t162h.png",
+      "bounds": {
+        "south": 32.5,
+        "north": 48.25,
+        "west": 106.0,
+        "east": 121.75
+      }
+    },
+    {
+      "lead_hours": 168,
+      "time": "2026-07-30T00:00:00",
+      "file": "invest92w_ft_wind_field/t168h.png",
+      "bounds": {
+        "south": 33.5,
+        "north": 49.25,
+        "west": 106.0,
+        "east": 121.75
+      }
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "generated_at": "2026-07-23T09:15:59.954510+00:00",
+  "storms": [
+    {
+      "storm_name": "bertha",
+      "region": "North Atlantic (U.S. East Coast)",
+      "file": "bertha_track.json",
+      "source": "aurora-0.25-finetuned",
+      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "n_points": 29,
+      "init_time": "2026-07-23T00:00:00",
+      "has_precip": false,
+      "field_layers": [
+        {
+          "field": "wind_ms",
+          "manifest": "bertha_ft_wind_field_manifest.json"
+        }
+      ]
+    },
+    {
+      "storm_name": "fausto",
+      "region": "North Atlantic (U.S. East Coast)",
+      "file": "fausto_track.json",
+      "source": "aurora-0.25-finetuned",
+      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "n_points": 29,
+      "init_time": "2026-07-23T00:00:00",
+      "has_precip": false,
+      "field_layers": [
+        {
+          "field": "wind_ms",
+          "manifest": "fausto_ft_wind_field_manifest.json"
+        }
+      ]
+    },
+    {
+      "storm_name": "invest92w",
+      "region": "Western North Pacific (East Asia)",
+      "file": "invest92w_track.json",
+      "source": "aurora-0.25-finetuned",
+      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "n_points": 29,
+      "init_time": "2026-07-23T00:00:00",
+      "has_precip": false,
+      "field_layers": [
+        {
+          "field": "wind_ms",
+          "manifest": "invest92w_ft_wind_field_manifest.json"
+        }
+      ]
+    },
+    {
+      "storm_name": "bertha",
+      "region": "North Atlantic (U.S. East Coast)",
+      "file": "bertha_track_v15.json",
+      "source": "aurora-1.5",
+      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "n_points": 29,
+      "init_time": "2026-07-23T00:00:00",
+      "has_precip": true,
+      "approximated_input_vars": [
+        "ci",
+        "lcc",
+        "mcc",
+        "hcc"
+      ],
+      "field_layers": [
+        {
+          "field": "precip_mm_1h",
+          "manifest": "bertha_v15_precip_field_manifest.json"
+        },
+        {
+          "field": "wind_ms",
+          "manifest": "bertha_v15_wind_field_manifest.json"
+        }
+      ],
+      "ensemble": "bertha_ensemble.json"
+    },
+    {
+      "storm_name": "fausto",
+      "region": "North Atlantic (U.S. East Coast)",
+      "file": "fausto_track_v15.json",
+      "source": "aurora-1.5",
+      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "n_points": 29,
+      "init_time": "2026-07-23T00:00:00",
+      "has_precip": true,
+      "approximated_input_vars": [
+        "ci",
+        "lcc",
+        "mcc",
+        "hcc"
+      ],
+      "field_layers": [
+        {
+          "field": "precip_mm_1h",
+          "manifest": "fausto_v15_precip_field_manifest.json"
+        },
+        {
+          "field": "wind_ms",
+          "manifest": "fausto_v15_wind_field_manifest.json"
+        }
+      ]
+    },
+    {
+      "storm_name": "invest92w",
+      "region": "Western North Pacific (East Asia)",
+      "file": "invest92w_track_v15.json",
+      "source": "aurora-1.5",
+      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "n_points": 29,
+      "init_time": "2026-07-23T00:00:00",
+      "has_precip": true,
+      "approximated_input_vars": [
+        "ci",
+        "lcc",
+        "mcc",
+        "hcc"
+      ],
+      "field_layers": [
+        {
+          "field": "precip_mm_1h",
+          "manifest": "invest92w_v15_precip_field_manifest.json"
+        },
+        {
+          "field": "wind_ms",
+          "manifest": "invest92w_v15_wind_field_manifest.json"
+        }
+      ]
+    },
+    {
+      "storm_name": "bertha",
+      "region": "North Atlantic (U.S. East Coast)",
+      "file": "bertha_observed.json",
+      "source": "nhc-best-track",
+      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "n_points": 23,
+      "init_time": "2026-07-17T12:00:00+00:00"
+    },
+    {
+      "storm_name": "fausto",
+      "region": "North Atlantic (U.S. East Coast)",
+      "file": "fausto_observed.json",
+      "source": "nhc-best-track",
+      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "n_points": 23,
+      "init_time": "2026-07-17T12:00:00+00:00"
+    },
+    {
+      "storm_name": "invest92w",
+      "region": "Western North Pacific (East Asia)",
+      "file": "invest92w_observed.json",
+      "source": "jtwc-best-track",
+      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "n_points": 5,
+      "init_time": "2026-07-21T12:00:00+00:00"
+    }
+  ]
+}

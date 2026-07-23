@@ -1,0 +1,134 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            137.1,
+            13.9
+          ],
+          [
+            135.5,
+            13.6
+          ],
+          [
+            132.1,
+            14.9
+          ],
+          [
+            130.6,
+            15.2
+          ],
+          [
+            129.4,
+            15.9
+          ]
+        ]
+      },
+      "properties": {
+        "storm_name": "invest92w",
+        "source": "jtwc-best-track",
+        "atcf_id": "wp922026",
+        "generated_at": "2026-07-23T09:15:59.954510+00:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          137.1,
+          13.9
+        ]
+      },
+      "properties": {
+        "time": "2026-07-21T12:00:00+00:00",
+        "lat": 13.9,
+        "lon": 137.1,
+        "wind": 10.28888,
+        "msl": 100700.0,
+        "stormtype": "TD",
+        "nhc_stormname": "92W"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          135.5,
+          13.6
+        ]
+      },
+      "properties": {
+        "time": "2026-07-21T18:00:00+00:00",
+        "lat": 13.6,
+        "lon": 135.5,
+        "wind": 10.28888,
+        "msl": 100500.0,
+        "stormtype": "TD",
+        "nhc_stormname": "92W"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          132.1,
+          14.9
+        ]
+      },
+      "properties": {
+        "time": "2026-07-22T12:00:00+00:00",
+        "lat": 14.9,
+        "lon": 132.1,
+        "wind": 10.28888,
+        "msl": 100500.0,
+        "stormtype": "TD",
+        "nhc_stormname": "92W"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          130.6,
+          15.2
+        ]
+      },
+      "properties": {
+        "time": "2026-07-22T18:00:00+00:00",
+        "lat": 15.2,
+        "lon": 130.6,
+        "wind": 10.28888,
+        "msl": 100300.0,
+        "stormtype": "TD",
+        "nhc_stormname": "92W"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.4,
+          15.9
+        ]
+      },
+      "properties": {
+        "time": "2026-07-23T00:00:00+00:00",
+        "lat": 15.9,
+        "lon": 129.4,
+        "wind": 10.28888,
+        "msl": 100300.0,
+        "stormtype": "TD",
+        "nhc_stormname": "92W"
+      }
+    }
+  ]
+}

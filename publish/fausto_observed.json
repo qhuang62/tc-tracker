@@ -1,0 +1,548 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -103.3,
+            9.3
+          ],
+          [
+            -104.2,
+            9.7
+          ],
+          [
+            -104.9,
+            10.0
+          ],
+          [
+            -105.6,
+            10.2
+          ],
+          [
+            -106.4,
+            10.5
+          ],
+          [
+            -107.5,
+            10.8
+          ],
+          [
+            -108.7,
+            11.2
+          ],
+          [
+            -109.7,
+            11.7
+          ],
+          [
+            -110.9,
+            12.0
+          ],
+          [
+            -112.1,
+            12.2
+          ],
+          [
+            -113.6,
+            12.5
+          ],
+          [
+            -115.0,
+            12.8
+          ],
+          [
+            -115.9,
+            13.4
+          ],
+          [
+            -116.3,
+            13.9
+          ],
+          [
+            -117.0,
+            14.4
+          ],
+          [
+            -117.6,
+            15.1
+          ],
+          [
+            -118.4,
+            16.0
+          ],
+          [
+            -119.3,
+            16.4
+          ],
+          [
+            -119.8,
+            16.5
+          ],
+          [
+            -120.4,
+            16.6
+          ],
+          [
+            -121.0,
+            16.9
+          ],
+          [
+            -121.5,
+            17.1
+          ],
+          [
+            -122.4,
+            17.4
+          ]
+        ]
+      },
+      "properties": {
+        "storm_name": "fausto",
+        "source": "nhc-best-track",
+        "atcf_id": "ep062026",
+        "generated_at": "2026-07-23T09:15:59.954510+00:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -103.3,
+          9.3
+        ]
+      },
+      "properties": {
+        "time": "2026-07-17T12:00:00+00:00",
+        "lat": 9.3,
+        "lon": -103.3,
+        "wind": 10.28888,
+        "msl": 100900.0,
+        "stormtype": "DB",
+        "nhc_stormname": "INVEST"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -104.2,
+          9.7
+        ]
+      },
+      "properties": {
+        "time": "2026-07-17T18:00:00+00:00",
+        "lat": 9.7,
+        "lon": -104.2,
+        "wind": 10.28888,
+        "msl": 100900.0,
+        "stormtype": "DB",
+        "nhc_stormname": "INVEST"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -104.9,
+          10.0
+        ]
+      },
+      "properties": {
+        "time": "2026-07-18T00:00:00+00:00",
+        "lat": 10.0,
+        "lon": -104.9,
+        "wind": 10.28888,
+        "msl": 100900.0,
+        "stormtype": "DB",
+        "nhc_stormname": "INVEST"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -105.6,
+          10.2
+        ]
+      },
+      "properties": {
+        "time": "2026-07-18T06:00:00+00:00",
+        "lat": 10.2,
+        "lon": -105.6,
+        "wind": 12.8611,
+        "msl": 100900.0,
+        "stormtype": "DB",
+        "nhc_stormname": "INVEST"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -106.4,
+          10.5
+        ]
+      },
+      "properties": {
+        "time": "2026-07-18T12:00:00+00:00",
+        "lat": 10.5,
+        "lon": -106.4,
+        "wind": 12.8611,
+        "msl": 100900.0,
+        "stormtype": "DB",
+        "nhc_stormname": "INVEST"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.5,
+          10.8
+        ]
+      },
+      "properties": {
+        "time": "2026-07-18T18:00:00+00:00",
+        "lat": 10.8,
+        "lon": -107.5,
+        "wind": 12.8611,
+        "msl": 100800.0,
+        "stormtype": "DB",
+        "nhc_stormname": "INVEST"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -108.7,
+          11.2
+        ]
+      },
+      "properties": {
+        "time": "2026-07-19T00:00:00+00:00",
+        "lat": 11.2,
+        "lon": -108.7,
+        "wind": 15.43332,
+        "msl": 100800.0,
+        "stormtype": "TD",
+        "nhc_stormname": "SIX"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -109.7,
+          11.7
+        ]
+      },
+      "properties": {
+        "time": "2026-07-19T06:00:00+00:00",
+        "lat": 11.7,
+        "lon": -109.7,
+        "wind": 15.43332,
+        "msl": 100700.0,
+        "stormtype": "TD",
+        "nhc_stormname": "SIX"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -110.9,
+          12.0
+        ]
+      },
+      "properties": {
+        "time": "2026-07-19T12:00:00+00:00",
+        "lat": 12.0,
+        "lon": -110.9,
+        "wind": 15.43332,
+        "msl": 100600.0,
+        "stormtype": "TD",
+        "nhc_stormname": "SIX"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.1,
+          12.2
+        ]
+      },
+      "properties": {
+        "time": "2026-07-19T18:00:00+00:00",
+        "lat": 12.2,
+        "lon": -112.1,
+        "wind": 18.00554,
+        "msl": 100500.0,
+        "stormtype": "TS",
+        "nhc_stormname": "FAUSTO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -113.6,
+          12.5
+        ]
+      },
+      "properties": {
+        "time": "2026-07-20T00:00:00+00:00",
+        "lat": 12.5,
+        "lon": -113.6,
+        "wind": 20.57776,
+        "msl": 100200.0,
+        "stormtype": "TS",
+        "nhc_stormname": "FAUSTO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -115.0,
+          12.8
+        ]
+      },
+      "properties": {
+        "time": "2026-07-20T06:00:00+00:00",
+        "lat": 12.8,
+        "lon": -115.0,
+        "wind": 23.14998,
+        "msl": 99900.0,
+        "stormtype": "TS",
+        "nhc_stormname": "FAUSTO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -115.9,
+          13.4
+        ]
+      },
+      "properties": {
+        "time": "2026-07-20T12:00:00+00:00",
+        "lat": 13.4,
+        "lon": -115.9,
+        "wind": 25.7222,
+        "msl": 99600.0,
+        "stormtype": "TS",
+        "nhc_stormname": "FAUSTO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -116.3,
+          13.9
+        ]
+      },
+      "properties": {
+        "time": "2026-07-20T18:00:00+00:00",
+        "lat": 13.9,
+        "lon": -116.3,
+        "wind": 30.86664,
+        "msl": 99100.0,
+        "stormtype": "TS",
+        "nhc_stormname": "FAUSTO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.0,
+          14.4
+        ]
+      },
+      "properties": {
+        "time": "2026-07-21T00:00:00+00:00",
+        "lat": 14.4,
+        "lon": -117.0,
+        "wind": 33.43886,
+        "msl": 98800.0,
+        "stormtype": "HU",
+        "nhc_stormname": "FAUSTO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.6,
+          15.1
+        ]
+      },
+      "properties": {
+        "time": "2026-07-21T06:00:00+00:00",
+        "lat": 15.1,
+        "lon": -117.6,
+        "wind": 36.01108,
+        "msl": 98500.0,
+        "stormtype": "HU",
+        "nhc_stormname": "FAUSTO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -118.4,
+          16.0
+        ]
+      },
+      "properties": {
+        "time": "2026-07-21T12:00:00+00:00",
+        "lat": 16.0,
+        "lon": -118.4,
+        "wind": 33.43886,
+        "msl": 98600.0,
+        "stormtype": "HU",
+        "nhc_stormname": "FAUSTO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.3,
+          16.4
+        ]
+      },
+      "properties": {
+        "time": "2026-07-21T18:00:00+00:00",
+        "lat": 16.4,
+        "lon": -119.3,
+        "wind": 33.43886,
+        "msl": 98700.0,
+        "stormtype": "HU",
+        "nhc_stormname": "FAUSTO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.8,
+          16.5
+        ]
+      },
+      "properties": {
+        "time": "2026-07-22T00:00:00+00:00",
+        "lat": 16.5,
+        "lon": -119.8,
+        "wind": 36.01108,
+        "msl": 98400.0,
+        "stormtype": "HU",
+        "nhc_stormname": "FAUSTO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.4,
+          16.6
+        ]
+      },
+      "properties": {
+        "time": "2026-07-22T06:00:00+00:00",
+        "lat": 16.6,
+        "lon": -120.4,
+        "wind": 38.5833,
+        "msl": 98100.0,
+        "stormtype": "HU",
+        "nhc_stormname": "FAUSTO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.0,
+          16.9
+        ]
+      },
+      "properties": {
+        "time": "2026-07-22T12:00:00+00:00",
+        "lat": 16.9,
+        "lon": -121.0,
+        "wind": 36.01108,
+        "msl": 98300.0,
+        "stormtype": "HU",
+        "nhc_stormname": "FAUSTO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.5,
+          17.1
+        ]
+      },
+      "properties": {
+        "time": "2026-07-22T18:00:00+00:00",
+        "lat": 17.1,
+        "lon": -121.5,
+        "wind": 36.01108,
+        "msl": 98300.0,
+        "stormtype": "HU",
+        "nhc_stormname": "FAUSTO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.4,
+          17.4
+        ]
+      },
+      "properties": {
+        "time": "2026-07-23T00:00:00+00:00",
+        "lat": 17.4,
+        "lon": -122.4,
+        "wind": 36.01108,
+        "msl": 98200.0,
+        "stormtype": "HU",
+        "nhc_stormname": "FAUSTO"
+      }
+    }
+  ]
+}

@@ -1,0 +1,548 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -83.5,
+            25.6
+          ],
+          [
+            -83.6,
+            25.8
+          ],
+          [
+            -83.7,
+            26.0
+          ],
+          [
+            -84.0,
+            26.2
+          ],
+          [
+            -84.0,
+            26.7
+          ],
+          [
+            -84.1,
+            27.3
+          ],
+          [
+            -84.6,
+            27.7
+          ],
+          [
+            -85.3,
+            27.8
+          ],
+          [
+            -85.3,
+            27.9
+          ],
+          [
+            -85.0,
+            27.5
+          ],
+          [
+            -85.0,
+            27.7
+          ],
+          [
+            -85.3,
+            28.4
+          ],
+          [
+            -85.5,
+            28.4
+          ],
+          [
+            -85.7,
+            28.6
+          ],
+          [
+            -86.0,
+            28.5
+          ],
+          [
+            -86.1,
+            28.5
+          ],
+          [
+            -86.2,
+            28.8
+          ],
+          [
+            -86.8,
+            29.3
+          ],
+          [
+            -87.4,
+            29.4
+          ],
+          [
+            -87.9,
+            29.4
+          ],
+          [
+            -88.5,
+            29.6
+          ],
+          [
+            -89.2,
+            29.9
+          ],
+          [
+            -90.5,
+            29.4
+          ]
+        ]
+      },
+      "properties": {
+        "storm_name": "bertha",
+        "source": "nhc-best-track",
+        "atcf_id": "al022026",
+        "generated_at": "2026-07-23T09:15:59.954510+00:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.5,
+          25.6
+        ]
+      },
+      "properties": {
+        "time": "2026-07-17T12:00:00+00:00",
+        "lat": 25.6,
+        "lon": -83.5,
+        "wind": 10.28888,
+        "msl": 101800.0,
+        "stormtype": "DB",
+        "nhc_stormname": "GENESIS004"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.6,
+          25.8
+        ]
+      },
+      "properties": {
+        "time": "2026-07-17T18:00:00+00:00",
+        "lat": 25.8,
+        "lon": -83.6,
+        "wind": 10.28888,
+        "msl": 101700.0,
+        "stormtype": "DB",
+        "nhc_stormname": "GENESIS004"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.7,
+          26.0
+        ]
+      },
+      "properties": {
+        "time": "2026-07-18T00:00:00+00:00",
+        "lat": 26.0,
+        "lon": -83.7,
+        "wind": 10.28888,
+        "msl": 101600.0,
+        "stormtype": "DB",
+        "nhc_stormname": "GENESIS004"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0,
+          26.2
+        ]
+      },
+      "properties": {
+        "time": "2026-07-18T06:00:00+00:00",
+        "lat": 26.2,
+        "lon": -84.0,
+        "wind": 10.28888,
+        "msl": 101600.0,
+        "stormtype": "DB",
+        "nhc_stormname": "GENESIS004"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0,
+          26.7
+        ]
+      },
+      "properties": {
+        "time": "2026-07-18T12:00:00+00:00",
+        "lat": 26.7,
+        "lon": -84.0,
+        "wind": 10.28888,
+        "msl": 101500.0,
+        "stormtype": "DB",
+        "nhc_stormname": "INVEST"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1,
+          27.3
+        ]
+      },
+      "properties": {
+        "time": "2026-07-18T18:00:00+00:00",
+        "lat": 27.3,
+        "lon": -84.1,
+        "wind": 10.28888,
+        "msl": 101500.0,
+        "stormtype": "LO",
+        "nhc_stormname": "INVEST"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.6,
+          27.7
+        ]
+      },
+      "properties": {
+        "time": "2026-07-19T00:00:00+00:00",
+        "lat": 27.7,
+        "lon": -84.6,
+        "wind": 12.8611,
+        "msl": 101300.0,
+        "stormtype": "LO",
+        "nhc_stormname": "INVEST"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.3,
+          27.8
+        ]
+      },
+      "properties": {
+        "time": "2026-07-19T06:00:00+00:00",
+        "lat": 27.8,
+        "lon": -85.3,
+        "wind": 12.8611,
+        "msl": 101200.0,
+        "stormtype": "LO",
+        "nhc_stormname": "INVEST"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.3,
+          27.9
+        ]
+      },
+      "properties": {
+        "time": "2026-07-19T12:00:00+00:00",
+        "lat": 27.9,
+        "lon": -85.3,
+        "wind": 12.8611,
+        "msl": 101100.0,
+        "stormtype": "TD",
+        "nhc_stormname": "TWO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.0,
+          27.5
+        ]
+      },
+      "properties": {
+        "time": "2026-07-19T18:00:00+00:00",
+        "lat": 27.5,
+        "lon": -85.0,
+        "wind": 12.8611,
+        "msl": 101000.0,
+        "stormtype": "TD",
+        "nhc_stormname": "TWO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.0,
+          27.7
+        ]
+      },
+      "properties": {
+        "time": "2026-07-20T00:00:00+00:00",
+        "lat": 27.7,
+        "lon": -85.0,
+        "wind": 12.8611,
+        "msl": 100800.0,
+        "stormtype": "TD",
+        "nhc_stormname": "TWO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.3,
+          28.4
+        ]
+      },
+      "properties": {
+        "time": "2026-07-20T06:00:00+00:00",
+        "lat": 28.4,
+        "lon": -85.3,
+        "wind": 15.43332,
+        "msl": 100700.0,
+        "stormtype": "TD",
+        "nhc_stormname": "TWO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.5,
+          28.4
+        ]
+      },
+      "properties": {
+        "time": "2026-07-20T12:00:00+00:00",
+        "lat": 28.4,
+        "lon": -85.5,
+        "wind": 15.43332,
+        "msl": 100600.0,
+        "stormtype": "TD",
+        "nhc_stormname": "TWO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.7,
+          28.6
+        ]
+      },
+      "properties": {
+        "time": "2026-07-20T18:00:00+00:00",
+        "lat": 28.6,
+        "lon": -85.7,
+        "wind": 15.43332,
+        "msl": 100500.0,
+        "stormtype": "TD",
+        "nhc_stormname": "TWO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.0,
+          28.5
+        ]
+      },
+      "properties": {
+        "time": "2026-07-21T00:00:00+00:00",
+        "lat": 28.5,
+        "lon": -86.0,
+        "wind": 18.00554,
+        "msl": 100300.0,
+        "stormtype": "TS",
+        "nhc_stormname": "BERTHA"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.1,
+          28.5
+        ]
+      },
+      "properties": {
+        "time": "2026-07-21T06:00:00+00:00",
+        "lat": 28.5,
+        "lon": -86.1,
+        "wind": 23.14998,
+        "msl": 99800.0,
+        "stormtype": "TS",
+        "nhc_stormname": "BERTHA"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.2,
+          28.8
+        ]
+      },
+      "properties": {
+        "time": "2026-07-21T12:00:00+00:00",
+        "lat": 28.8,
+        "lon": -86.2,
+        "wind": 25.7222,
+        "msl": 99600.0,
+        "stormtype": "TS",
+        "nhc_stormname": "BERTHA"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.8,
+          29.3
+        ]
+      },
+      "properties": {
+        "time": "2026-07-21T18:00:00+00:00",
+        "lat": 29.3,
+        "lon": -86.8,
+        "wind": 25.7222,
+        "msl": 99500.0,
+        "stormtype": "TS",
+        "nhc_stormname": "BERTHA"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.4,
+          29.4
+        ]
+      },
+      "properties": {
+        "time": "2026-07-22T00:00:00+00:00",
+        "lat": 29.4,
+        "lon": -87.4,
+        "wind": 25.7222,
+        "msl": 99600.0,
+        "stormtype": "TS",
+        "nhc_stormname": "BERTHA"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.9,
+          29.4
+        ]
+      },
+      "properties": {
+        "time": "2026-07-22T06:00:00+00:00",
+        "lat": 29.4,
+        "lon": -87.9,
+        "wind": 23.14998,
+        "msl": 99800.0,
+        "stormtype": "TS",
+        "nhc_stormname": "BERTHA"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -88.5,
+          29.6
+        ]
+      },
+      "properties": {
+        "time": "2026-07-22T12:00:00+00:00",
+        "lat": 29.6,
+        "lon": -88.5,
+        "wind": 23.14998,
+        "msl": 99800.0,
+        "stormtype": "TS",
+        "nhc_stormname": "BERTHA"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.2,
+          29.9
+        ]
+      },
+      "properties": {
+        "time": "2026-07-22T18:00:00+00:00",
+        "lat": 29.9,
+        "lon": -89.2,
+        "wind": 20.57776,
+        "msl": 100000.0,
+        "stormtype": "TS",
+        "nhc_stormname": "BERTHA"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.5,
+          29.4
+        ]
+      },
+      "properties": {
+        "time": "2026-07-23T00:00:00+00:00",
+        "lat": 29.4,
+        "lon": -90.5,
+        "wind": 20.57776,
+        "msl": 100200.0,
+        "stormtype": "TS",
+        "nhc_stormname": "BERTHA"
+      }
+    }
+  ]
+}

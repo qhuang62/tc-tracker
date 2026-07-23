@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<title>Aurora TC Tracker (prototype)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<style>
+  :root, html[data-theme="dark"] {
+    --bg: #0c1826;
+    --panel: #101f33;
+    --panel-2: #14263d;
+    --border: rgba(255,255,255,0.08);
+    --ink: #e8eef5;
+    --ink-secondary: #9fb3c8;
+    --ink-muted: #6b7f95;
+    --accent: #5da5da;
+    --warn: #f0b23c;
+    --popup-bg: #14263d;
+    --popup-ink: #e8eef5;
+    --popup-ink-secondary: #8ea3ba;
+  }
+  html[data-theme="light"] {
+    --bg: #eef2f6;
+    --panel: #ffffff;
+    --panel-2: #f2f5f8;
+    --border: rgba(10,30,50,0.10);
+    --ink: #0f1c2c;
+    --ink-secondary: #45566b;
+    --ink-muted: #7c8aa0;
+    --accent: #1f6fb2;
+    --warn: #a5650a;
+    --popup-bg: #ffffff;
+    --popup-ink: #0f1c2c;
+    --popup-ink-secondary: #5a6b80;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  #banner {
+    height: 40px; display: flex; align-items: center; gap: 0.9em; padding: 0 14px;
+    background: var(--panel); color: var(--ink); font-size: 0.82em; border-bottom: 1px solid var(--border);
+    position: relative; z-index: 1100;
+  }
+  #banner .title { font-weight: 600; letter-spacing: 0.01em; color: var(--ink); }
+  #banner .warn { color: var(--warn); font-size: 0.95em; }
+  #status { margin-left: auto; font-size: 0.9em; color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+
+  #layout { position: absolute; top: 40px; bottom: 0; left: 0; right: 0; display: flex; }
+  #sidebar {
+    width: 300px; flex: none; background: var(--panel); border-right: 1px solid var(--border);
+    overflow-y: auto; padding: 14px 0 90px;
+  }
+  #map { flex: 1; position: relative; }
+
+  .side-section { padding: 0 16px 18px; border-bottom: 1px solid var(--border); margin-bottom: 14px; }
+  .side-section:last-child { border-bottom: none; }
+  .side-section h2 {
+    font-size: 0.7em; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--ink-muted); margin: 0 0 10px;
+  }
+  .side-row {
+    display: flex; align-items: center; gap: 8px; padding: 5px 4px; border-radius: 6px;
+    font-size: 0.85em; color: var(--ink-secondary); cursor: pointer; user-select: none;
+  }
+  .side-row:hover { background: rgba(255,255,255,0.04); color: var(--ink); }
+  .side-row input[type="checkbox"] { accent-color: var(--accent); width: 14px; height: 14px; flex: none; }
+  .side-row .swatch { width: 18px; height: 3px; border-radius: 2px; flex: none; }
+  .side-row .swatch.square { width: 9px; height: 9px; border-radius: 2px; }
+  .side-row .label-name { flex: 1; }
+  .side-row .meta { font-size: 0.85em; color: var(--ink-muted); }
+
+  .segmented { display: flex; gap: 4px; margin-bottom: 4px; }
+  .segbtn {
+    flex: 1; background: var(--panel-2); color: var(--ink-secondary); border: 1px solid var(--border);
+    border-radius: 6px; padding: 5px 0; font-size: 0.78em; cursor: pointer; text-align: center;
+  }
+  .segbtn.active { background: var(--accent); color: #05131f; border-color: var(--accent); font-weight: 600; }
+
+  .legend-swatches { margin-top: 10px; font-size: 0.78em; color: var(--ink-secondary); line-height: 1.55em; }
+  .legend-swatches i { width: 10px; height: 10px; display: inline-block; margin-right: 7px; border-radius: 50%; vertical-align: middle; }
+
+  #timebar {
+    position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 1000;
+    background: rgba(16,31,51,0.94); color: var(--ink); padding: 9px 18px; border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.45); font-size: 0.85em; display: flex; align-items: center;
+    gap: 12px; max-width: 92vw; border: 1px solid var(--border);
+  }
+  #playBtn {
+    background: var(--panel-2); color: var(--ink); border: 1px solid var(--border); border-radius: 6px;
+    padding: 4px 11px; font-size: 0.9em; cursor: pointer;
+  }
+  #playBtn:hover { border-color: var(--accent); }
+  #leadSlider { width: 260px; accent-color: var(--accent); }
+  #leadLabel { min-width: 5.5em; font-variant-numeric: tabular-nums; color: var(--ink-secondary); }
+
+  .popup-table td { padding: 1px 6px 1px 0; font-size: 0.85em; color: var(--popup-ink); }
+  .popup-table td:first-child { color: var(--popup-ink-secondary); }
+  .leaflet-popup-content-wrapper { background: var(--popup-bg); color: var(--popup-ink); }
+  .leaflet-popup-tip { background: var(--popup-bg); }
+  .leaflet-container a.leaflet-popup-close-button { color: var(--popup-ink-secondary); }
+
+  .storm-label {
+    font-weight: 600; font-size: 0.82em; white-space: nowrap; padding: 2px 7px;
+    background: rgba(12,24,38,0.88); color: #e8eef5; border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.5); border-left: 3px solid var(--label-accent, var(--accent));
+  }
+  html[data-theme="light"] .storm-label { background: rgba(255,255,255,0.92); color: #0f1c2c; }
+  .obs-marker { width: 8px; height: 8px; background: var(--obs-color); border: 1px solid #0c1826; border-radius: 2px; }
+
+  #themeToggle {
+    background: var(--panel-2); color: var(--ink-secondary); border: 1px solid var(--border);
+    border-radius: 6px; padding: 3px 10px; font-size: 0.85em; cursor: pointer; margin-left: 8px;
+  }
+  #themeToggle:hover { border-color: var(--accent); color: var(--ink); }
+
+  .region-group { margin-bottom: 16px; }
+  .region-group-name {
+    font-size: 0.72em; font-weight: 700; color: var(--accent); letter-spacing: 0.03em;
+    padding: 2px 4px 6px; border-bottom: 1px solid var(--border); margin-bottom: 6px;
+  }
+  .region-group .meta { padding: 2px 4px; }
+  .storm-group { margin-bottom: 6px; }
+  .storm-group-name {
+    font-weight: 600; font-size: 0.88em; color: var(--ink); padding: 4px 4px 2px;
+  }
+  .quickjump { display: flex; gap: 5px; }
+  .quickbtn {
+    background: var(--panel-2); color: var(--ink-secondary); border: 1px solid var(--border);
+    border-radius: 5px; padding: 3px 8px; font-size: 0.78em; cursor: pointer;
+  }
+  .quickbtn:hover { border-color: var(--accent); color: var(--ink); }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+</style>
+</head>
+<body>
+<div id="banner">
+  <span class="title">Aurora TC Tracker</span>
+  <span class="warn" title="Aurora's Tracker has no dissipation detection: after a storm weakens/makes landfall, it keeps reporting the nearest local pressure minimum every step, whether or not that minimum still represents a real tropical cyclone. Long-lead-time track segments with very low wind (especially after apparent landfall) may not represent an actual storm — cross-check against the observed track and intensity before trusting a late-lead position.">Prototype — model output only, no dissipation detection past landfall/weakening. Compare against the observed track.</span>
+  <button id="themeToggle" title="Switch between night and day mode">&#9728; Day mode</button>
+  <span id="status">loading&hellip;</span>
+</div>
+<div id="layout">
+  <div id="sidebar">
+    <div class="side-section">
+      <h2>Supported regions</h2>
+      <div id="regionTrackControls"></div>
+    </div>
+    <div class="side-section">
+      <h2>Layers</h2>
+      <div class="segmented">
+        <button class="segbtn active" data-mode="wind">Wind</button>
+        <button class="segbtn" data-mode="pressure">Pressure</button>
+        <button class="segbtn" data-mode="precip">Precip</button>
+      </div>
+      <div id="legendSwatches" class="legend-swatches"></div>
+      <div style="height:10px;"></div>
+      <div id="fieldLayerControls"></div>
+      <div id="ensembleControls"></div>
+    </div>
+  </div>
+  <div id="map"></div>
+</div>
+<div id="timebar">
+  <button id="playBtn">&#9654; Play</button>
+  <input type="range" id="leadSlider" min="0" max="0" step="6" value="0">
+  <span id="leadLabel">T+0h</span>
+  <div class="quickjump" id="quickJump">
+    <button class="quickbtn" data-hours="24">24h</button>
+    <button class="quickbtn" data-hours="72">72h</button>
+    <button class="quickbtn" data-hours="120">120h</button>
+    <button class="quickbtn" data-hours="168">168h</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+// Saffir-Simpson-ish coloring off Aurora's raw 10m wind (m/s). This is the
+// model's own field, not an official intensity estimate -- category
+// boundaries are the standard NHC ones just converted from kt to m/s.
+function windColor(ms) {
+  if (ms == null) return "#697b8c";
+  const kt = ms * 1.94384;
+  if (kt < 34) return "#5da5da";   // TD
+  if (kt < 64) return "#38b44a";   // TS
+  if (kt < 83) return "#f6d743";   // Cat 1
+  if (kt < 96) return "#f2a341";   // Cat 2
+  if (kt < 113) return "#e8622a";  // Cat 3
+  if (kt < 137) return "#d8271f";  // Cat 4
+  return "#a3126b";                // Cat 5
+}
+
+// MSLP bands roughly mirror the wind bands above (same color = same rough
+// intensity) so switching modes doesn't relabel "weak" and "intense".
+function pressureColor(pa) {
+  if (pa == null) return "#697b8c";
+  const hpa = pa / 100;
+  if (hpa >= 1000) return "#5da5da";
+  if (hpa >= 990) return "#38b44a";
+  if (hpa >= 970) return "#f6d743";
+  if (hpa >= 950) return "#f2a341";
+  if (hpa >= 930) return "#e8622a";
+  if (hpa >= 910) return "#d8271f";
+  return "#a3126b";
+}
+
+// Only ever populated for Aurora 1.5 tracks. Sequential blue->purple scale,
+// bands chosen for typical TC rain rates (mm/h); not an official product.
+function precipColor(mmh) {
+  if (mmh == null) return "#697b8c";
+  if (mmh < 2) return "#c6dbef";
+  if (mmh < 5) return "#6baed6";
+  if (mmh < 10) return "#2171b5";
+  if (mmh < 20) return "#08306b";
+  if (mmh < 40) return "#6a51a3";
+  return "#54278f";
+}
+
+const COLOR_FNS = { wind: windColor, pressure: pressureColor, precip: precipColor };
+const LEGEND_HTML = {
+  wind: [
+    ["TD (<34kt)", "#5da5da"], ["TS (34-63kt)", "#38b44a"], ["Cat 1", "#f6d743"],
+    ["Cat 2", "#f2a341"], ["Cat 3", "#e8622a"], ["Cat 4", "#d8271f"], ["Cat 5", "#a3126b"],
+  ].map(([l, c]) => `<i style="background:${c}"></i>${l}`).join("<br>"),
+  pressure: [
+    ["&ge; 1000 hPa", "#5da5da"], ["990-1000", "#38b44a"], ["970-990", "#f6d743"],
+    ["950-970", "#f2a341"], ["930-950", "#e8622a"], ["910-930", "#d8271f"], ["&lt; 910", "#a3126b"],
+  ].map(([l, c]) => `<i style="background:${c}"></i>${l}`).join("<br>"),
+  precip: [
+    ["&lt; 2 mm/h", "#c6dbef"], ["2-5", "#6baed6"], ["5-10", "#2171b5"],
+    ["10-20", "#08306b"], ["20-40", "#6a51a3"], ["&ge; 40", "#54278f"], ["no data", "#697b8c"],
+  ].map(([l, c]) => `<i style="background:${c}"></i>${l}`).join("<br>"),
+};
+
+// Two Aurora model variants get fixed, distinct hues (never cycled): blue for
+// Fine-Tuned (this project's primary/default model), violet for Aurora 1.5.
+// Observed/NHC tracks are deliberately off this hue family entirely (a
+// neutral cream) so a real observation can never be mistaken for a model run.
+const MODEL_COLORS = { "aurora-0.25-finetuned": "#3987e5", "aurora-1.5": "#9085e9" };
+const OBSERVED_COLOR = "#f2ede1";
+const ENSEMBLE_COLOR = "#e87ba4";
+
+const map = L.map("map", { worldCopyJump: true, zoomControl: false }).setView([25, -70], 4);
+L.control.zoom({ position: "bottomleft" }).addTo(map);
+
+const TILE_URLS = {
+  dark: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+  light: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+};
+const TILE_ATTRIBUTION = '&copy; OpenStreetMap contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+let tileLayer = L.tileLayer(TILE_URLS.dark, { maxZoom: 12, attribution: TILE_ATTRIBUTION }).addTo(map);
+
+function setTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  map.removeLayer(tileLayer);
+  tileLayer = L.tileLayer(TILE_URLS[theme], { maxZoom: 12, attribution: TILE_ATTRIBUTION }).addTo(map);
+  const btn = document.getElementById("themeToggle");
+  btn.innerHTML = theme === "dark" ? "&#9728; Day mode" : "&#9790; Night mode";
+}
+document.getElementById("themeToggle").addEventListener("click", () => {
+  const current = document.documentElement.getAttribute("data-theme");
+  setTheme(current === "dark" ? "light" : "dark");
+});
+
+function renderLegendSwatches(mode) {
+  document.getElementById("legendSwatches").innerHTML = LEGEND_HTML[mode];
+}
+
+const allBounds = [];
+const storms = [];    // { storm_name, source, points: [{marker, props, leadHours}], layerGroup }
+const labelRowByStorm = new Map(); // storm_name -> next label row index, so overlapping start positions stagger
+function nextLabelRow(stormName) {
+  const row = labelRowByStorm.get(stormName) || 0;
+  labelRowByStorm.set(stormName, row + 1);
+  return row;
+}
+const observedTracks = []; // { storm_name, layerGroup }
+let colorMode = "wind";
+let maxLeadHours = 0;
+const initTimeMsByStorm = new Map(); // storm_name -> model init time (ms), for aligning the observed track's own absolute times isn't needed since observed always renders in full
+
+function valueFor(mode, props) {
+  if (mode === "wind") return props.wind;
+  if (mode === "pressure") return props.msl;
+  return props.peak_precip_mm_1h;
+}
+
+function applyColorMode(mode) {
+  colorMode = mode;
+  const fn = COLOR_FNS[mode];
+  for (const storm of storms) {
+    for (const pt of storm.points) {
+      const v = valueFor(mode, pt.props);
+      pt.marker.setStyle({ fillColor: fn(v), fillOpacity: v == null ? 0.35 : 0.9 });
+    }
+  }
+  renderLegendSwatches(mode);
+  document.querySelectorAll(".segbtn").forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
+}
+
+function applyLeadTime(hours) {
+  document.getElementById("leadLabel").textContent = `T+${hours}h`;
+  for (const storm of storms) {
+    let closest = storm.points[0];
+    for (const pt of storm.points) {
+      if (Math.abs(pt.leadHours - hours) < Math.abs(closest.leadHours - hours)) closest = pt;
+    }
+    for (const pt of storm.points) {
+      const isCurrent = pt === closest;
+      pt.marker.setStyle({ radius: isCurrent ? 9 : 5, weight: isCurrent ? 2 : 1 });
+    }
+  }
+  updateFieldOverlays(hours);
+  updateEnsembleCones(hours);
+}
+
+// Spatial (gridded, not just track-point) layers: populated for whichever
+// field(s) a storm's manifest entry carries (run_aurora_tc.py -> wind only;
+// run_aurora_tc_v15.py -> wind + precip). Each entry gets at most one active
+// overlay image at a time, swapped as the slider moves.
+const FIELD_LABELS = { precip_mm_1h: "Precip field", wind_ms: "Wind field" };
+const fieldLayers = []; // { field, storm, frames: [{leadHours, bounds, url}], overlay, enabled }
+
+function updateFieldOverlays(hours) {
+  for (const fl of fieldLayers) {
+    if (fl.overlay) { map.removeLayer(fl.overlay); fl.overlay = null; }
+    if (!fl.enabled || fl.frames.length === 0) continue;
+    let closest = fl.frames[0];
+    for (const fr of fl.frames) {
+      if (Math.abs(fr.leadHours - hours) < Math.abs(closest.leadHours - hours)) closest = fr;
+    }
+    const b = closest.bounds;
+    fl.overlay = L.imageOverlay(closest.url, [[b.south, b.west], [b.north, b.east]], { opacity: 0.75 }).addTo(map);
+  }
+}
+
+function buildFieldLayerControls() {
+  const container = document.getElementById("fieldLayerControls");
+  const fieldNames = [...new Set(fieldLayers.map(fl => fl.field))];
+  for (const field of fieldNames) {
+    const row = document.createElement("label");
+    row.className = "side-row";
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.addEventListener("change", () => {
+      for (const fl of fieldLayers) if (fl.field === field) fl.enabled = cb.checked;
+      updateFieldOverlays(Number(document.getElementById("leadSlider").value));
+    });
+    const swatch = document.createElement("span");
+    swatch.className = "swatch";
+    swatch.style.background = field === "precip_mm_1h" ? "#2171b5" : "#f2a341";
+    const name = document.createElement("span");
+    name.className = "label-name";
+    name.textContent = FIELD_LABELS[field] || field;
+    row.append(cb, swatch, name);
+    container.appendChild(row);
+  }
+}
+
+// Ensemble uncertainty: run_aurora_tc_v15_ensemble.py's N-member spread,
+// rendered two ways at once (both Weather-Lab-style conventions) -- a light
+// bounding-box envelope per lead time (not a real convex hull yet, simplest
+// correct start), plus the individual member tracks as thin "spaghetti"
+// lines so the actual spread of trajectories is visible, not just a box.
+const ensembleCones = []; // { storm, nMembers, steps, rect, memberLines, enabled }
+
+function updateEnsembleCones(hours) {
+  for (const ec of ensembleCones) {
+    if (ec.rect) { map.removeLayer(ec.rect); ec.rect = null; }
+    if (!ec.enabled || ec.steps.length === 0) continue;
+    let closest = ec.steps[0];
+    for (const s of ec.steps) {
+      if (Math.abs(s.leadHours - hours) < Math.abs(closest.leadHours - hours)) closest = s;
+    }
+    ec.rect = L.rectangle(
+      [[closest.lat_min, closest.lon_min], [closest.lat_max, closest.lon_max]],
+      { color: ENSEMBLE_COLOR, weight: 1, fillColor: ENSEMBLE_COLOR, fillOpacity: 0.08, dashArray: "3,4" },
+    ).addTo(map);
+  }
+}
+
+function buildEnsembleControls() {
+  const container = document.getElementById("ensembleControls");
+  for (const ec of ensembleCones) {
+    const row = document.createElement("label");
+    row.className = "side-row";
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.addEventListener("change", () => {
+      ec.enabled = cb.checked;
+      updateEnsembleCones(Number(document.getElementById("leadSlider").value));
+      ec.memberLines.forEach(line => cb.checked ? line.addTo(map) : map.removeLayer(line));
+    });
+    const swatch = document.createElement("span");
+    swatch.className = "swatch";
+    swatch.style.background = ENSEMBLE_COLOR;
+    const name = document.createElement("span");
+    name.className = "label-name";
+    name.textContent = `${ec.storm} spread`;
+    const meta = document.createElement("span");
+    meta.className = "meta";
+    meta.textContent = `${ec.nMembers}m`;
+    row.append(cb, swatch, name, meta);
+    container.appendChild(row);
+  }
+}
+
+// One row per (storm, model) track, wired to that track's own L.layerGroup
+// (polyline + markers + name label) so it can be shown/hidden independently
+// -- e.g. both Fine-Tuned and Aurora 1.5 tracks for the same storm currently
+// render together whenever both exist.
+// One group per storm name (a row with the storm's name), with each
+// model's own checkbox nested underneath -- so "bertha" appears once, with
+// "Fine-Tuned" and "Aurora 1.5" as independently toggleable sub-rows,
+// rather than two unrelated-looking flat rows both saying "bertha".
+// Fixed display order for this platform's two currently-supported regions
+// (not derived from data -- these are the regions the pipeline is built to
+// serve, regardless of whether a storm happens to be active in one right
+// now). A region with no active storm still gets its heading, with a plain
+// "no active storm" line, so the region itself is visible as supported.
+const REGION_ORDER = ["North Atlantic (U.S. East Coast)", "Western North Pacific (East Asia)"];
+
+function buildRegionTrackControls() {
+  const container = document.getElementById("regionTrackControls");
+  const stormsByRegion = new Map();
+  for (const storm of storms) {
+    if (!stormsByRegion.has(storm.region)) stormsByRegion.set(storm.region, new Map());
+    const byName = stormsByRegion.get(storm.region);
+    if (!byName.has(storm.storm_name)) byName.set(storm.storm_name, { models: [], observed: null });
+    byName.get(storm.storm_name).models.push(storm);
+  }
+  for (const obs of observedTracks) {
+    if (!stormsByRegion.has(obs.region)) stormsByRegion.set(obs.region, new Map());
+    const byName = stormsByRegion.get(obs.region);
+    if (!byName.has(obs.storm_name)) byName.set(obs.storm_name, { models: [], observed: null });
+    byName.get(obs.storm_name).observed = obs;
+  }
+
+  for (const region of REGION_ORDER) {
+    const regionEl = document.createElement("div");
+    regionEl.className = "region-group";
+    const regionName = document.createElement("div");
+    regionName.className = "region-group-name";
+    regionName.textContent = region;
+    regionEl.appendChild(regionName);
+
+    const byName = stormsByRegion.get(region);
+    if (!byName || byName.size === 0) {
+      const empty = document.createElement("div");
+      empty.className = "meta";
+      empty.textContent = "No active storm this cycle.";
+      regionEl.appendChild(empty);
+      container.appendChild(regionEl);
+      continue;
+    }
+
+    for (const [stormName, group] of byName) {
+      const groupEl = document.createElement("div");
+      groupEl.className = "storm-group";
+      const nameEl = document.createElement("div");
+      nameEl.className = "storm-group-name";
+      nameEl.textContent = stormName;
+      groupEl.appendChild(nameEl);
+
+      for (const storm of group.models) {
+        const modelLabel = storm.source === "aurora-1.5" ? "Aurora 1.5" : "Fine-Tuned";
+        const row = document.createElement("label");
+        row.className = "side-row";
+        row.style.paddingLeft = "14px";
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.checked = true;
+        cb.addEventListener("change", () => {
+          if (cb.checked) storm.layerGroup.addTo(map);
+          else map.removeLayer(storm.layerGroup);
+        });
+        const swatch = document.createElement("span");
+        swatch.className = "swatch";
+        swatch.style.background = MODEL_COLORS[storm.source] || "#8896a6";
+        const name = document.createElement("span");
+        name.className = "label-name";
+        name.textContent = modelLabel;
+        row.append(cb, swatch, name);
+        groupEl.appendChild(row);
+      }
+
+      if (group.observed) {
+        const obs = group.observed;
+        const row = document.createElement("label");
+        row.className = "side-row";
+        row.style.paddingLeft = "14px";
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.checked = true;
+        cb.addEventListener("change", () => {
+          if (cb.checked) obs.layerGroup.addTo(map);
+          else map.removeLayer(obs.layerGroup);
+        });
+        const swatch = document.createElement("span");
+        swatch.className = "swatch square";
+        swatch.style.background = OBSERVED_COLOR;
+        const name = document.createElement("span");
+        name.className = "label-name";
+        name.textContent = `Observed (${OBSERVED_AGENCY_LABEL[obs.source] || "?"})`;
+        row.append(cb, swatch, name);
+        groupEl.appendChild(row);
+      }
+
+      regionEl.appendChild(groupEl);
+    }
+    container.appendChild(regionEl);
+  }
+}
+
+function makeStormLabel(text, accentColor, rowIndex = 0) {
+  // rowIndex staggers labels vertically -- Fine-Tuned and Aurora 1.5 tracks
+  // for the same storm start from nearly identical positions (same NHC
+  // init position), so anchoring both at the same offset made the labels
+  // overlap illegibly. Each model/observed label for a storm gets its own row.
+  return L.divIcon({
+    className: "", html: `<div class="storm-label" style="--label-accent:${accentColor}">${text}</div>`,
+    iconAnchor: [-6, 10 - rowIndex * 20],
+  });
+}
+
+const OBSERVED_AGENCY_LABEL = { "nhc-best-track": "NHC", "jtwc-best-track": "JTWC" };
+
+async function loadObservedTrack(entry) {
+  const resp = await fetch(entry.file);
+  if (!resp.ok) throw new Error(`${entry.file}: HTTP ${resp.status}`);
+  const geojson = await resp.json();
+  const line = geojson.features.find(f => f.geometry.type === "LineString");
+  const points = geojson.features.filter(f => f.geometry.type === "Point");
+  const agency = OBSERVED_AGENCY_LABEL[entry.source] || "observed";
+
+  const layerGroup = L.layerGroup().addTo(map);
+  L.polyline(line.geometry.coordinates.map(([lon, lat]) => [lat, lon]), {
+    color: OBSERVED_COLOR, weight: 2, opacity: 0.9,
+  }).addTo(layerGroup);
+
+  points.forEach(f => {
+    const [lon, lat] = f.geometry.coordinates;
+    const p = f.properties;
+    const windKt = p.wind != null ? (p.wind * 1.94384).toFixed(0) + " kt" : "n/a";
+    const mslHpa = p.msl != null ? (p.msl / 100).toFixed(0) + " hPa" : "n/a";
+    const marker = L.marker([lat, lon], {
+      icon: L.divIcon({ className: "", html: '<div class="obs-marker" style="--obs-color:' + OBSERVED_COLOR + '"></div>', iconSize: [8, 8], iconAnchor: [4, 4] }),
+    }).addTo(layerGroup);
+    marker.bindPopup(`
+      <table class="popup-table">
+        <tr><td>Storm</td><td><b>${line.properties.storm_name}</b> (observed)</td></tr>
+        <tr><td>Valid</td><td>${p.time}</td></tr>
+        <tr><td>Position</td><td>${lat.toFixed(2)}, ${lon.toFixed(2)}</td></tr>
+        <tr><td>Wind</td><td>${windKt}</td></tr>
+        <tr><td>MSLP</td><td>${mslHpa}</td></tr>
+        <tr><td>Type</td><td>${p.stormtype || "n/a"}</td></tr>
+        <tr><td>Name (at time)</td><td>${p.nhc_stormname || "n/a"}</td></tr>
+        <tr><td>Source</td><td>${agency} best track</td></tr>
+      </table>
+    `);
+    allBounds.push([lat, lon]);
+  });
+
+  L.marker([points[points.length - 1].geometry.coordinates[1], points[points.length - 1].geometry.coordinates[0]], {
+    icon: makeStormLabel(`${entry.storm_name} (observed, ${agency})`, OBSERVED_COLOR, nextLabelRow(entry.storm_name)),
+  }).addTo(layerGroup);
+
+  observedTracks.push({ storm_name: entry.storm_name, region: entry.region || "Other", source: entry.source, layerGroup });
+}
+
+async function loadStorm(entry) {
+  const resp = await fetch(entry.file);
+  if (!resp.ok) throw new Error(`${entry.file}: HTTP ${resp.status}`);
+  const geojson = await resp.json();
+
+  const line = geojson.features.find(f => f.geometry.type === "LineString");
+  const points = geojson.features.filter(f => f.geometry.type === "Point");
+
+  if (entry.field_layers && entry.field_layers.length) {
+    for (const fl of entry.field_layers) {
+      const fmResp = await fetch("../publish/" + fl.manifest);
+      if (!fmResp.ok) continue;
+      const fm = await fmResp.json();
+      fieldLayers.push({
+        field: fm.field,
+        storm: entry.storm_name,
+        overlay: null,
+        enabled: false,
+        frames: fm.frames.map(fr => ({ leadHours: fr.lead_hours, bounds: fr.bounds, url: "../publish/" + fr.file })),
+      });
+    }
+  }
+
+  if (entry.ensemble) {
+    const ensResp = await fetch("../publish/" + entry.ensemble);
+    if (ensResp.ok) {
+      const ens = await ensResp.json();
+      if (ens.steps && ens.steps.length) {
+        const initMsEns = new Date(ens.steps[0].time).getTime();
+        const steps = ens.steps.map(s => ({
+          leadHours: Math.round((new Date(s.time).getTime() - initMsEns) / 3600000),
+          lat_min: s.lat_min, lat_max: s.lat_max, lon_min: s.lon_min, lon_max: s.lon_max,
+          member_positions: s.member_positions,
+        }));
+        const nMembers = ens.n_members;
+        const memberLines = [];
+        for (let m = 0; m < nMembers; m++) {
+          const latlngs = steps.map(s => [s.member_positions[m][1], s.member_positions[m][0]]);
+          memberLines.push(L.polyline(latlngs, { color: ENSEMBLE_COLOR, weight: 1.4, opacity: 0.55 }));
+        }
+        ensembleCones.push({ storm: entry.storm_name, nMembers, enabled: false, rect: null, steps, memberLines });
+      }
+    }
+  }
+
+  const layerGroup = L.layerGroup().addTo(map);
+  const lineColor = MODEL_COLORS[line.properties.source] || "#8896a6";
+
+  L.polyline(line.geometry.coordinates.map(([lon, lat]) => [lat, lon]), {
+    color: lineColor, weight: 2, opacity: 0.75, dashArray: "5,5",
+  }).addTo(layerGroup);
+
+  const initMs = new Date(points[0].properties.time).getTime();
+  initTimeMsByStorm.set(entry.storm_name, initMs);
+  const stormPoints = [];
+
+  points.forEach((f, i) => {
+    const [lon, lat] = f.geometry.coordinates;
+    const p = f.properties;
+    const leadHours = Math.round((new Date(p.time).getTime() - initMs) / 3600000);
+    const marker = L.circleMarker([lat, lon], {
+      radius: 5, color: "#0c1826", weight: 1, fillColor: windColor(p.wind), fillOpacity: p.wind == null ? 0.35 : 0.9,
+    }).addTo(layerGroup);
+    stormPoints.push({ marker, props: p, leadHours });
+    maxLeadHours = Math.max(maxLeadHours, leadHours);
+    const windKt = p.wind != null ? (p.wind * 1.94384).toFixed(0) + " kt" : "n/a (seed point)";
+    const mslHpa = p.msl != null ? (p.msl / 100).toFixed(0) + " hPa" : "n/a (seed point)";
+    const precipRow = p.peak_precip_mm_1h != null
+      ? `<tr><td>Peak rain rate</td><td>${p.peak_precip_mm_1h.toFixed(1)} mm/h</td></tr>`
+      : "";
+    const approx = line.properties.approximated_input_vars;
+    const approxRow = approx && approx.length
+      ? `<tr><td>Approximated inputs</td><td style="color:#b45309">${approx.join(", ")}</td></tr>`
+      : "";
+    marker.bindPopup(`
+      <table class="popup-table">
+        <tr><td>Storm</td><td><b>${line.properties.storm_name}</b></td></tr>
+        <tr><td>Valid</td><td>${p.time}</td></tr>
+        <tr><td>Position</td><td>${lat.toFixed(2)}, ${lon.toFixed(2)}</td></tr>
+        <tr><td>Wind</td><td>${windKt}</td></tr>
+        <tr><td>MSLP</td><td>${mslHpa}</td></tr>
+        ${precipRow}
+        <tr><td>Source</td><td>${line.properties.source || "unknown"}</td></tr>
+        ${approxRow}
+        <tr><td>Generated</td><td>${line.properties.generated_at || "unknown"}</td></tr>
+      </table>
+    `);
+    allBounds.push([lat, lon]);
+  });
+
+  storms.push({ storm_name: entry.storm_name, region: entry.region || "Other", source: line.properties.source, points: stormPoints, layerGroup });
+
+  const modelLabel = line.properties.source === "aurora-1.5" ? "Aurora 1.5" : "Fine-Tuned";
+  L.marker([points[0].geometry.coordinates[1], points[0].geometry.coordinates[0]], {
+    icon: makeStormLabel(`${entry.storm_name} &middot; ${modelLabel}`, lineColor, nextLabelRow(entry.storm_name)),
+  }).addTo(layerGroup);
+}
+
+async function main() {
+  const statusEl = document.getElementById("status");
+  try {
+    const manifestResp = await fetch("../publish/manifest.json");
+    if (!manifestResp.ok) throw new Error(`manifest.json: HTTP ${manifestResp.status}`);
+    const manifest = await manifestResp.json();
+
+    if (!manifest.storms.length) {
+      statusEl.textContent = "No active-storm tracks published for this cycle.";
+      return;
+    }
+
+    for (const entry of manifest.storms) {
+      entry.file = "../publish/" + entry.file;
+      if (entry.source === "nhc-best-track" || entry.source === "jtwc-best-track") await loadObservedTrack(entry);
+      else await loadStorm(entry);
+    }
+    if (allBounds.length) map.fitBounds(allBounds, { padding: [40, 40] });
+    statusEl.textContent = `${manifest.storms.length} layer(s) — generated ${manifest.generated_at}`;
+
+    const slider = document.getElementById("leadSlider");
+    slider.max = maxLeadHours;
+    slider.value = maxLeadHours;
+    applyLeadTime(maxLeadHours);
+    slider.addEventListener("input", () => applyLeadTime(Number(slider.value)));
+
+    document.querySelectorAll(".quickbtn").forEach(btn => {
+      const hours = Number(btn.dataset.hours);
+      btn.disabled = hours > maxLeadHours;
+      btn.style.opacity = btn.disabled ? 0.4 : 1;
+      btn.addEventListener("click", () => {
+        slider.value = Math.min(hours, maxLeadHours);
+        applyLeadTime(Number(slider.value));
+      });
+    });
+
+    renderLegendSwatches("wind");
+    document.querySelectorAll(".segbtn[data-mode]").forEach(btn => {
+      btn.addEventListener("click", () => applyColorMode(btn.dataset.mode));
+    });
+
+    buildRegionTrackControls();
+    buildFieldLayerControls();
+    buildEnsembleControls();
+
+    const playBtn = document.getElementById("playBtn");
+    let playTimer = null;
+    playBtn.addEventListener("click", () => {
+      if (playTimer) {
+        clearInterval(playTimer);
+        playTimer = null;
+        playBtn.innerHTML = "&#9654; Play";
+        return;
+      }
+      playBtn.innerHTML = "&#10074;&#10074; Pause";
+      playTimer = setInterval(() => {
+        let next = Number(slider.value) + Number(slider.step);
+        if (next > maxLeadHours) next = 0; // loop back to the start
+        slider.value = next;
+        applyLeadTime(next);
+      }, 800);
+    });
+  } catch (err) {
+    statusEl.textContent = "Failed to load track data: " + err.message;
+    console.error(err);
+  }
+}
+
+main();
+</script>
+</body>
+</html>
