@@ -172,8 +172,9 @@
         <h2>Layers</h2>
         <div class="segmented" id="weatherLayerPicker">
           <button class="segbtn active" data-weather-layer="wind_ms">Wind</button>
-          <button class="segbtn" data-weather-layer="pressure_hpa">Pressure</button>
+          <button class="segbtn" data-weather-layer="temp_2m_c">Temp</button>
           <button class="segbtn" data-weather-layer="precip_mm_6h">Precip</button>
+          <button class="segbtn" data-weather-layer="pressure_hpa">Pressure</button>
         </div>
         <div id="weatherLegendSwatches" class="legend-swatches"></div>
         <div id="weatherLayerDesc" class="layer-desc"></div>
@@ -277,6 +278,17 @@ const LEGEND_HTML = {
 // Observed/NHC tracks are deliberately off this hue family entirely (a
 // neutral cream) so a real observation can never be mistaken for a model run.
 const MODEL_COLORS = { "aurora-0.25-finetuned": "#3987e5", "aurora-1.5": "#9085e9" };
+// Shown as a tooltip on each model/observed checkbox row -- explains what
+// toggling that particular row actually means, since "Fine-Tuned" / "1.5" /
+// "Observed" aren't self-explanatory to someone new to this project.
+const MODEL_DESCRIPTIONS = {
+  "aurora-0.25-finetuned": "Aurora 0.25 Fine-Tuned -- Microsoft's officially recommended Aurora variant for tropical cyclone tracking. No precipitation output.",
+  "aurora-1.5": "Aurora 1.5 -- adds precipitation and expanded surface variables Fine-Tuned lacks, at the cost of needing more real-time input fields (a few of which aren't in ECMWF's free feed and are flagged/approximated rather than real observations).",
+};
+const OBSERVED_DESCRIPTIONS = {
+  "nhc-best-track": "NHC best track -- the U.S. National Hurricane Center's own real observed position/intensity history for this storm (Atlantic + Eastern Pacific).",
+  "jtwc-best-track": "JTWC best track -- the U.S. Joint Typhoon Warning Center's own real observed position/intensity history for this storm (Western Pacific).",
+};
 const OBSERVED_COLOR = "#f2ede1";
 const ENSEMBLE_COLOR = "#e87ba4";
 
@@ -398,6 +410,9 @@ function buildFieldLayerControls() {
   for (const field of fieldNames) {
     const row = document.createElement("label");
     row.className = "side-row";
+    row.title = field === "precip_mm_1h"
+      ? "Per-storm hourly precipitation crop (Aurora 1.5 only) -- an ~16deg region around the tracked center, swapped frame-by-frame with the slider."
+      : "Per-storm hourly wind speed crop -- an ~16deg region around the tracked center, swapped frame-by-frame with the slider. Works for both Fine-Tuned and Aurora 1.5.";
     const cb = document.createElement("input");
     cb.type = "checkbox";
     cb.addEventListener("change", () => {
@@ -442,6 +457,7 @@ function buildEnsembleControls() {
   for (const ec of ensembleCones) {
     const row = document.createElement("label");
     row.className = "side-row";
+    row.title = `${ec.nMembers}-member Aurora 1.5 stochastic ensemble (AuroraV1p5Ensemble) -- each member is the same rollout re-run with a different random seed. Shows both the individual member tracks and a bounding-box spread envelope per lead time (not yet a true convex hull).`;
     const cb = document.createElement("input");
     cb.type = "checkbox";
     cb.addEventListener("change", () => {
@@ -525,6 +541,7 @@ function buildRegionTrackControls() {
         const row = document.createElement("label");
         row.className = "side-row";
         row.style.paddingLeft = "14px";
+        row.title = MODEL_DESCRIPTIONS[storm.source] || "";
         const cb = document.createElement("input");
         cb.type = "checkbox";
         cb.checked = true;
@@ -547,6 +564,7 @@ function buildRegionTrackControls() {
         const row = document.createElement("label");
         row.className = "side-row";
         row.style.paddingLeft = "14px";
+        row.title = OBSERVED_DESCRIPTIONS[obs.source] || "";
         const cb = document.createElement("input");
         cb.type = "checkbox";
         cb.checked = true;
@@ -579,6 +597,7 @@ const WEATHER_LAYER_DESC = {
   wind_ms: "10m wind speed from Aurora 1.5's own forecast, global grid, updated each 6-hour step. Same color scale as the Cyclones wind layer (red/dark = higher wind speed).",
   pressure_hpa: "Mean sea level pressure. Low pressure (red) marks storms and troughs; high pressure (blue) marks ridges/clear weather. Shown at constant opacity since pressure is meaningful everywhere, not just at extremes.",
   precip_mm_6h: "6-hourly accumulated precipitation from Aurora 1.5 -- the only Aurora variant with precipitation output at all (Fine-Tuned has none). Near-zero rain fades to transparent.",
+  temp_2m_c: "2m air temperature. Cold air (blue) toward the poles/winter hemisphere, hot air (red) toward the tropics/summer hemisphere. Constant opacity, same as pressure.",
 };
 const WEATHER_LEGEND_HTML = {
   wind_ms: [
@@ -589,6 +608,9 @@ const WEATHER_LEGEND_HTML = {
   ].map(([l, c]) => `<i style="background:${c}"></i>${l}`).join("<br>"),
   precip_mm_6h: [
     ["none", "#f7fbff"], ["", "#6baed6"], ["heavy (15+ mm)", "#08306b"],
+  ].map(([l, c]) => `<i style="background:${c}"></i>${l}`).join("<br>"),
+  temp_2m_c: [
+    ["cold (-40C)", "#2166ac"], ["~0C", "#f7f7f7"], ["hot (40C)", "#b2182b"],
   ].map(([l, c]) => `<i style="background:${c}"></i>${l}`).join("<br>"),
 };
 const weatherLayers = {}; // field -> { frames: [{leadHours, bounds, url}], initTime }
