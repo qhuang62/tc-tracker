@@ -304,14 +304,24 @@ function applyColorMode(mode) {
 function applyLeadTime(hours) {
   document.getElementById("leadLabel").textContent = `T+${hours}h`;
   for (const storm of storms) {
-    let closest = storm.points[0];
+    // Only points at or before the current lead time are "revealed" -- the
+    // track builds up as the slider advances, rather than showing the full
+    // multi-day forecast immediately. Latest revealed point is the visually
+    // highlighted "current position" (bigger marker), matching how the
+    // Play button animates the storm advancing in real time.
+    const visible = storm.points.filter(pt => pt.leadHours <= hours);
+    const current = visible.length ? visible[visible.length - 1] : null;
+
     for (const pt of storm.points) {
-      if (Math.abs(pt.leadHours - hours) < Math.abs(closest.leadHours - hours)) closest = pt;
+      const shouldShow = pt.leadHours <= hours;
+      if (shouldShow && !pt.revealed) { pt.marker.addTo(storm.layerGroup); pt.revealed = true; }
+      else if (!shouldShow && pt.revealed) { storm.layerGroup.removeLayer(pt.marker); pt.revealed = false; }
+      if (shouldShow) {
+        const isCurrent = pt === current;
+        pt.marker.setStyle({ radius: isCurrent ? 9 : 5, weight: isCurrent ? 2 : 1 });
+      }
     }
-    for (const pt of storm.points) {
-      const isCurrent = pt === closest;
-      pt.marker.setStyle({ radius: isCurrent ? 9 : 5, weight: isCurrent ? 2 : 1 });
-    }
+    storm.polyline.setLatLngs(visible.map(pt => [pt.lat, pt.lon]));
   }
   updateFieldOverlays(hours);
   updateEnsembleCones(hours);
@@ -619,7 +629,11 @@ async function loadStorm(entry) {
   const layerGroup = L.layerGroup().addTo(map);
   const lineColor = MODEL_COLORS[line.properties.source] || "#8896a6";
 
-  L.polyline(line.geometry.coordinates.map(([lon, lat]) => [lat, lon]), {
+  // Polyline starts empty and markers start unattached -- applyLeadTime()
+  // progressively reveals both up to the current slider position (storm's
+  // future positions shouldn't be visible before the slider reaches them),
+  // rather than showing the entire multi-day track at once.
+  const polyline = L.polyline([], {
     color: lineColor, weight: 2, opacity: 0.75, dashArray: "5,5",
   }).addTo(layerGroup);
 
@@ -633,8 +647,8 @@ async function loadStorm(entry) {
     const leadHours = Math.round((new Date(p.time).getTime() - initMs) / 3600000);
     const marker = L.circleMarker([lat, lon], {
       radius: 5, color: "#0c1826", weight: 1, fillColor: windColor(p.wind), fillOpacity: p.wind == null ? 0.35 : 0.9,
-    }).addTo(layerGroup);
-    stormPoints.push({ marker, props: p, leadHours });
+    });
+    stormPoints.push({ marker, props: p, leadHours, lat, lon, revealed: false });
     maxLeadHours = Math.max(maxLeadHours, leadHours);
     const windKt = p.wind != null ? (p.wind * 1.94384).toFixed(0) + " kt" : "n/a (seed point)";
     const mslHpa = p.msl != null ? (p.msl / 100).toFixed(0) + " hPa" : "n/a (seed point)";
@@ -661,7 +675,7 @@ async function loadStorm(entry) {
     allBounds.push([lat, lon]);
   });
 
-  storms.push({ storm_name: entry.storm_name, region: entry.region || "Other", source: line.properties.source, points: stormPoints, layerGroup });
+  storms.push({ storm_name: entry.storm_name, region: entry.region || "Other", source: line.properties.source, points: stormPoints, layerGroup, polyline });
 
   const modelLabel = line.properties.source === "aurora-1.5" ? "Aurora 1.5" : "Fine-Tuned";
   L.marker([points[0].geometry.coordinates[1], points[0].geometry.coordinates[0]], {
