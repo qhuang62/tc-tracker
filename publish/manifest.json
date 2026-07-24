@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-07-23T09:15:59.954510+00:00",
+  "generated_at": "2026-07-24T01:35:09.329972+00:00",
   "storms": [
     {
       "storm_name": "bertha",
       "region": "North Atlantic (U.S. East Coast)",
       "file": "bertha_track.json",
       "source": "aurora-0.25-finetuned",
-      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "generated_at": "2026-07-24T01:35:09.329972+00:00",
       "n_points": 29,
       "init_time": "2026-07-23T00:00:00",
       "has_precip": false,
@@ -22,7 +22,7 @@
       "region": "North Atlantic (U.S. East Coast)",
       "file": "fausto_track.json",
       "source": "aurora-0.25-finetuned",
-      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "generated_at": "2026-07-24T01:35:09.329972+00:00",
       "n_points": 29,
       "init_time": "2026-07-23T00:00:00",
       "has_precip": false,
@@ -38,7 +38,7 @@
       "region": "Western North Pacific (East Asia)",
       "file": "invest92w_track.json",
       "source": "aurora-0.25-finetuned",
-      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "generated_at": "2026-07-24T01:35:09.329972+00:00",
       "n_points": 29,
       "init_time": "2026-07-23T00:00:00",
       "has_precip": false,
@@ -54,7 +54,7 @@
       "region": "North Atlantic (U.S. East Coast)",
       "file": "bertha_track_v15.json",
       "source": "aurora-1.5",
-      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "generated_at": "2026-07-24T01:35:09.329972+00:00",
       "n_points": 29,
       "init_time": "2026-07-23T00:00:00",
       "has_precip": true,
@@ -81,7 +81,7 @@
       "region": "North Atlantic (U.S. East Coast)",
       "file": "fausto_track_v15.json",
       "source": "aurora-1.5",
-      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "generated_at": "2026-07-24T01:35:09.329972+00:00",
       "n_points": 29,
       "init_time": "2026-07-23T00:00:00",
       "has_precip": true,
@@ -107,7 +107,7 @@
       "region": "Western North Pacific (East Asia)",
       "file": "invest92w_track_v15.json",
       "source": "aurora-1.5",
-      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "generated_at": "2026-07-24T01:35:09.329972+00:00",
       "n_points": 29,
       "init_time": "2026-07-23T00:00:00",
       "has_precip": true,
@@ -133,7 +133,7 @@
       "region": "North Atlantic (U.S. East Coast)",
       "file": "bertha_observed.json",
       "source": "nhc-best-track",
-      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "generated_at": "2026-07-24T01:35:09.329972+00:00",
       "n_points": 23,
       "init_time": "2026-07-17T12:00:00+00:00"
     },
@@ -142,7 +142,7 @@
       "region": "North Atlantic (U.S. East Coast)",
       "file": "fausto_observed.json",
       "source": "nhc-best-track",
-      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "generated_at": "2026-07-24T01:35:09.329972+00:00",
       "n_points": 23,
       "init_time": "2026-07-17T12:00:00+00:00"
     },
@@ -151,9 +151,26 @@
       "region": "Western North Pacific (East Asia)",
       "file": "invest92w_observed.json",
       "source": "jtwc-best-track",
-      "generated_at": "2026-07-23T09:15:59.954510+00:00",
+      "generated_at": "2026-07-24T01:35:09.329972+00:00",
       "n_points": 5,
       "init_time": "2026-07-21T12:00:00+00:00"
+    }
+  ],
+  "weather_layers": [
+    {
+      "field": "precip_mm_6h",
+      "manifest": "global_2026072318_precip_field_manifest.json",
+      "init_time": "2026-07-23T18:00:00"
+    },
+    {
+      "field": "pressure_hpa",
+      "manifest": "global_2026072318_pressure_field_manifest.json",
+      "init_time": "2026-07-23T18:00:00"
+    },
+    {
+      "field": "wind_ms",
+      "manifest": "global_2026072318_wind_field_manifest.json",
+      "init_time": "2026-07-23T18:00:00"
     }
   ]
 }

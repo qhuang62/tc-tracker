@@ -165,6 +165,36 @@ def _publish_observed(storm_name: str, generated_at: str) -> dict | None:
     return entry
 
 
+def _publish_global_weather() -> list[dict]:
+    """Copy run_aurora_weather_global.py's global field manifests + PNG
+    frames into publish/ -- the "Weather" mode's data, independent of any
+    tracked storm. If multiple cycles exist (repeated pipeline runs), only
+    the newest per field is published, so the web UI always shows one
+    current global snapshot rather than an ever-growing pile of old cycles.
+    """
+    by_field: dict[str, Path] = {}
+    for manifest_path in sorted(SOL_OUTPUT_DIR.glob("global_*_*_field_manifest.json")):
+        field = json.loads(manifest_path.read_text())["field"]
+        # Filenames sort by cycle timestamp (global_<YYYYMMDDHH>_...), so the
+        # last match per field in sorted order is the newest cycle.
+        by_field[field] = manifest_path
+
+    layers = []
+    for field, manifest_path in by_field.items():
+        field_manifest = json.loads(manifest_path.read_text())
+        dir_name = manifest_path.stem.removesuffix("_manifest")
+        src_dir = SOL_OUTPUT_DIR / dir_name
+        dst_dir = PUBLISH_DIR / dir_name
+        dst_dir.mkdir(exist_ok=True)
+        for frame in field_manifest["frames"]:
+            shutil.copy2(src_dir / Path(frame["file"]).name, dst_dir / Path(frame["file"]).name)
+        out_path = PUBLISH_DIR / manifest_path.name
+        out_path.write_text(json.dumps(field_manifest, indent=2))
+        print(f"Published {out_path} ({len(field_manifest['frames'])} frames, init_time={field_manifest['init_time']})")
+        layers.append({"field": field, "manifest": out_path.name, "init_time": field_manifest["init_time"]})
+    return layers
+
+
 def publish_all() -> list[dict]:
     generated_at = datetime.now(timezone.utc).isoformat()
     manifest_entries = []
@@ -198,9 +228,11 @@ def publish_all() -> list[dict]:
         if entry:
             manifest_entries.append(entry)
 
-    manifest = {"generated_at": generated_at, "storms": manifest_entries}
+    weather_layers = _publish_global_weather()
+
+    manifest = {"generated_at": generated_at, "storms": manifest_entries, "weather_layers": weather_layers}
     (PUBLISH_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2))
-    print(f"Wrote {PUBLISH_DIR / 'manifest.json'} ({len(manifest_entries)} storms)")
+    print(f"Wrote {PUBLISH_DIR / 'manifest.json'} ({len(manifest_entries)} storms, {len(weather_layers)} weather layers)")
     return manifest_entries
 
 

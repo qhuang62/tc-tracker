@@ -131,6 +131,18 @@
   }
   .quickbtn:hover { border-color: var(--accent); color: var(--ink); }
 
+  #modeToggle {
+    display: flex; gap: 6px; padding: 10px 16px; border-bottom: 1px solid var(--border);
+  }
+  .modebtn {
+    background: var(--panel-2); color: var(--ink-secondary); border: 1px solid var(--border);
+    border-radius: 7px; padding: 6px 16px; font-size: 0.85em; font-weight: 600; cursor: pointer;
+  }
+  .modebtn.active { background: var(--accent); color: #05131f; border-color: var(--accent); }
+  .mode-panel { display: none; }
+  .mode-panel.active { display: block; }
+  .layer-desc { font-size: 0.78em; color: var(--ink-muted); line-height: 1.4em; margin-top: 8px; }
+
   ::-webkit-scrollbar { width: 8px; }
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
 </style>
@@ -142,23 +154,48 @@
   <button id="themeToggle" title="Switch between night and day mode">&#9728; Day mode</button>
   <span id="status">loading&hellip;</span>
 </div>
+<div id="modeToggle">
+  <button class="modebtn" data-view="weather">Weather</button>
+  <button class="modebtn active" data-view="cyclones">Cyclones</button>
+</div>
 <div id="layout">
   <div id="sidebar">
-    <div class="side-section">
-      <h2>Supported regions</h2>
-      <div id="regionTrackControls"></div>
-    </div>
-    <div class="side-section">
-      <h2>Layers</h2>
-      <div class="segmented">
-        <button class="segbtn active" data-mode="wind">Wind</button>
-        <button class="segbtn" data-mode="pressure">Pressure</button>
-        <button class="segbtn" data-mode="precip">Precip</button>
+    <div id="weatherPanel" class="mode-panel">
+      <div class="side-section">
+        <h2>Model</h2>
+        <div class="segmented">
+          <button class="segbtn active" data-weather-model="aurora-1.5">Aurora 1.5</button>
+        </div>
+        <div class="layer-desc">Global gridded forecast, updated each model cycle. Only Aurora 1.5 has global surface output (precipitation especially is 1.5-only) -- Fine-Tuned stays Cyclones-only.</div>
       </div>
-      <div id="legendSwatches" class="legend-swatches"></div>
-      <div style="height:10px;"></div>
-      <div id="fieldLayerControls"></div>
-      <div id="ensembleControls"></div>
+      <div class="side-section">
+        <h2>Layers</h2>
+        <div class="segmented" id="weatherLayerPicker">
+          <button class="segbtn active" data-weather-layer="wind_ms">Wind</button>
+          <button class="segbtn" data-weather-layer="pressure_hpa">Pressure</button>
+          <button class="segbtn" data-weather-layer="precip_mm_6h">Precip</button>
+        </div>
+        <div id="weatherLegendSwatches" class="legend-swatches"></div>
+        <div id="weatherLayerDesc" class="layer-desc"></div>
+      </div>
+    </div>
+    <div id="cyclonesPanel" class="mode-panel active">
+      <div class="side-section">
+        <h2>Supported regions</h2>
+        <div id="regionTrackControls"></div>
+      </div>
+      <div class="side-section">
+        <h2>Layers</h2>
+        <div class="segmented">
+          <button class="segbtn active" data-mode="wind">Wind</button>
+          <button class="segbtn" data-mode="pressure">Pressure</button>
+          <button class="segbtn" data-mode="precip">Precip</button>
+        </div>
+        <div id="legendSwatches" class="legend-swatches"></div>
+        <div style="height:10px;"></div>
+        <div id="fieldLayerControls"></div>
+        <div id="ensembleControls"></div>
+      </div>
     </div>
   </div>
   <div id="map"></div>
@@ -246,6 +283,13 @@ const ENSEMBLE_COLOR = "#e87ba4";
 const map = L.map("map", { worldCopyJump: true, zoomControl: false }).setView([25, -70], 4);
 L.control.zoom({ position: "bottomleft" }).addTo(map);
 
+// All Cyclones-mode content (every storm track, observed track, field crop,
+// ensemble layer) lives inside this one group, so switching to Weather mode
+// is a single addLayer/removeLayer rather than having to individually hide
+// every sub-layer and remember each one's own on/off state.
+const cyclonesLayerGroup = L.layerGroup().addTo(map);
+let currentView = "cyclones";
+
 const TILE_URLS = {
   dark: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
   light: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
@@ -325,6 +369,7 @@ function applyLeadTime(hours) {
   }
   updateFieldOverlays(hours);
   updateEnsembleCones(hours);
+  updateWeatherOverlay(hours);
 }
 
 // Spatial (gridded, not just track-point) layers: populated for whichever
@@ -336,14 +381,14 @@ const fieldLayers = []; // { field, storm, frames: [{leadHours, bounds, url}], o
 
 function updateFieldOverlays(hours) {
   for (const fl of fieldLayers) {
-    if (fl.overlay) { map.removeLayer(fl.overlay); fl.overlay = null; }
+    if (fl.overlay) { cyclonesLayerGroup.removeLayer(fl.overlay); fl.overlay = null; }
     if (!fl.enabled || fl.frames.length === 0) continue;
     let closest = fl.frames[0];
     for (const fr of fl.frames) {
       if (Math.abs(fr.leadHours - hours) < Math.abs(closest.leadHours - hours)) closest = fr;
     }
     const b = closest.bounds;
-    fl.overlay = L.imageOverlay(closest.url, [[b.south, b.west], [b.north, b.east]], { opacity: 0.75 }).addTo(map);
+    fl.overlay = L.imageOverlay(closest.url, [[b.south, b.west], [b.north, b.east]], { opacity: 0.75 }).addTo(cyclonesLayerGroup);
   }
 }
 
@@ -379,7 +424,7 @@ const ensembleCones = []; // { storm, nMembers, steps, rect, memberLines, enable
 
 function updateEnsembleCones(hours) {
   for (const ec of ensembleCones) {
-    if (ec.rect) { map.removeLayer(ec.rect); ec.rect = null; }
+    if (ec.rect) { cyclonesLayerGroup.removeLayer(ec.rect); ec.rect = null; }
     if (!ec.enabled || ec.steps.length === 0) continue;
     let closest = ec.steps[0];
     for (const s of ec.steps) {
@@ -388,7 +433,7 @@ function updateEnsembleCones(hours) {
     ec.rect = L.rectangle(
       [[closest.lat_min, closest.lon_min], [closest.lat_max, closest.lon_max]],
       { color: ENSEMBLE_COLOR, weight: 1, fillColor: ENSEMBLE_COLOR, fillOpacity: 0.08, dashArray: "3,4" },
-    ).addTo(map);
+    ).addTo(cyclonesLayerGroup);
   }
 }
 
@@ -402,7 +447,7 @@ function buildEnsembleControls() {
     cb.addEventListener("change", () => {
       ec.enabled = cb.checked;
       updateEnsembleCones(Number(document.getElementById("leadSlider").value));
-      ec.memberLines.forEach(line => cb.checked ? line.addTo(map) : map.removeLayer(line));
+      ec.memberLines.forEach(line => cb.checked ? line.addTo(cyclonesLayerGroup) : cyclonesLayerGroup.removeLayer(line));
     });
     const swatch = document.createElement("span");
     swatch.className = "swatch";
@@ -484,8 +529,8 @@ function buildRegionTrackControls() {
         cb.type = "checkbox";
         cb.checked = true;
         cb.addEventListener("change", () => {
-          if (cb.checked) storm.layerGroup.addTo(map);
-          else map.removeLayer(storm.layerGroup);
+          if (cb.checked) storm.layerGroup.addTo(cyclonesLayerGroup);
+          else cyclonesLayerGroup.removeLayer(storm.layerGroup);
         });
         const swatch = document.createElement("span");
         swatch.className = "swatch";
@@ -506,8 +551,8 @@ function buildRegionTrackControls() {
         cb.type = "checkbox";
         cb.checked = true;
         cb.addEventListener("change", () => {
-          if (cb.checked) obs.layerGroup.addTo(map);
-          else map.removeLayer(obs.layerGroup);
+          if (cb.checked) obs.layerGroup.addTo(cyclonesLayerGroup);
+          else cyclonesLayerGroup.removeLayer(obs.layerGroup);
         });
         const swatch = document.createElement("span");
         swatch.className = "swatch square";
@@ -522,6 +567,66 @@ function buildRegionTrackControls() {
       regionEl.appendChild(groupEl);
     }
     container.appendChild(regionEl);
+  }
+}
+
+// ---- Weather mode: global Aurora 1.5 fields, independent of any storm ----
+// One layer active at a time (unlike Cyclones' field-layer checkboxes,
+// which can combine) -- a global overlay covering the whole map only makes
+// sense one at a time, same convention as most weather-map tools.
+const WEATHER_LAYER_LABELS = { wind_ms: "Wind speed", pressure_hpa: "Sea level pressure", precip_mm_6h: "Precipitation" };
+const WEATHER_LAYER_DESC = {
+  wind_ms: "10m wind speed from Aurora 1.5's own forecast, global grid, updated each 6-hour step. Same color scale as the Cyclones wind layer (red/dark = higher wind speed).",
+  pressure_hpa: "Mean sea level pressure. Low pressure (red) marks storms and troughs; high pressure (blue) marks ridges/clear weather. Shown at constant opacity since pressure is meaningful everywhere, not just at extremes.",
+  precip_mm_6h: "6-hourly accumulated precipitation from Aurora 1.5 -- the only Aurora variant with precipitation output at all (Fine-Tuned has none). Near-zero rain fades to transparent.",
+};
+const WEATHER_LEGEND_HTML = {
+  wind_ms: [
+    ["low", "#ffffb2"], ["", "#fd8d3c"], ["high (75+ m/s)", "#800026"],
+  ].map(([l, c]) => `<i style="background:${c}"></i>${l}`).join("<br>"),
+  pressure_hpa: [
+    ["low (950 hPa)", "#b2182b"], ["~995 hPa", "#f7f7f7"], ["high (1040 hPa)", "#2166ac"],
+  ].map(([l, c]) => `<i style="background:${c}"></i>${l}`).join("<br>"),
+  precip_mm_6h: [
+    ["none", "#f7fbff"], ["", "#6baed6"], ["heavy (15+ mm)", "#08306b"],
+  ].map(([l, c]) => `<i style="background:${c}"></i>${l}`).join("<br>"),
+};
+const weatherLayers = {}; // field -> { frames: [{leadHours, bounds, url}], initTime }
+let currentWeatherLayer = "wind_ms";
+let weatherOverlay = null;
+
+function updateWeatherOverlay(hours) {
+  if (weatherOverlay) { map.removeLayer(weatherOverlay); weatherOverlay = null; }
+  if (currentView !== "weather") return;
+  const layer = weatherLayers[currentWeatherLayer];
+  if (!layer || !layer.frames.length) return;
+  let closest = layer.frames[0];
+  for (const fr of layer.frames) {
+    if (Math.abs(fr.leadHours - hours) < Math.abs(closest.leadHours - hours)) closest = fr;
+  }
+  const b = closest.bounds;
+  weatherOverlay = L.imageOverlay(closest.url, [[b.south, b.west], [b.north, b.east]], { opacity: 0.7 }).addTo(map);
+}
+
+function setWeatherLayer(field) {
+  currentWeatherLayer = field;
+  document.querySelectorAll(".segbtn[data-weather-layer]").forEach(b => b.classList.toggle("active", b.dataset.weatherLayer === field));
+  document.getElementById("weatherLayerDesc").textContent = WEATHER_LAYER_DESC[field] || "";
+  document.getElementById("weatherLegendSwatches").innerHTML = WEATHER_LEGEND_HTML[field] || "";
+  updateWeatherOverlay(Number(document.getElementById("leadSlider").value));
+}
+
+function setView(view) {
+  currentView = view;
+  document.querySelectorAll(".modebtn").forEach(b => b.classList.toggle("active", b.dataset.view === view));
+  document.getElementById("weatherPanel").classList.toggle("active", view === "weather");
+  document.getElementById("cyclonesPanel").classList.toggle("active", view === "cyclones");
+  if (view === "weather") {
+    map.removeLayer(cyclonesLayerGroup);
+    updateWeatherOverlay(Number(document.getElementById("leadSlider").value));
+  } else {
+    if (weatherOverlay) { map.removeLayer(weatherOverlay); weatherOverlay = null; }
+    cyclonesLayerGroup.addTo(map);
   }
 }
 
@@ -546,7 +651,7 @@ async function loadObservedTrack(entry) {
   const points = geojson.features.filter(f => f.geometry.type === "Point");
   const agency = OBSERVED_AGENCY_LABEL[entry.source] || "observed";
 
-  const layerGroup = L.layerGroup().addTo(map);
+  const layerGroup = L.layerGroup().addTo(cyclonesLayerGroup);
   L.polyline(line.geometry.coordinates.map(([lon, lat]) => [lat, lon]), {
     color: OBSERVED_COLOR, weight: 2, opacity: 0.9,
   }).addTo(layerGroup);
@@ -626,7 +731,7 @@ async function loadStorm(entry) {
     }
   }
 
-  const layerGroup = L.layerGroup().addTo(map);
+  const layerGroup = L.layerGroup().addTo(cyclonesLayerGroup);
   const lineColor = MODEL_COLORS[line.properties.source] || "#8896a6";
 
   // Polyline starts empty and markers start unattached -- applyLeadTime()
@@ -690,6 +795,16 @@ async function main() {
     if (!manifestResp.ok) throw new Error(`manifest.json: HTTP ${manifestResp.status}`);
     const manifest = await manifestResp.json();
 
+    for (const wl of manifest.weather_layers || []) {
+      const fmResp = await fetch("../publish/" + wl.manifest);
+      if (!fmResp.ok) continue;
+      const fm = await fmResp.json();
+      weatherLayers[wl.field] = {
+        initTime: wl.init_time,
+        frames: fm.frames.map(fr => ({ leadHours: fr.lead_hours, bounds: fr.bounds, url: "../publish/" + fr.file })),
+      };
+    }
+
     if (!manifest.storms.length) {
       statusEl.textContent = "No active-storm tracks published for this cycle.";
       return;
@@ -727,6 +842,14 @@ async function main() {
     buildRegionTrackControls();
     buildFieldLayerControls();
     buildEnsembleControls();
+
+    document.querySelectorAll(".modebtn").forEach(btn => {
+      btn.addEventListener("click", () => setView(btn.dataset.view));
+    });
+    document.querySelectorAll(".segbtn[data-weather-layer]").forEach(btn => {
+      btn.addEventListener("click", () => setWeatherLayer(btn.dataset.weatherLayer));
+    });
+    setWeatherLayer(currentWeatherLayer);
 
     const playBtn = document.getElementById("playBtn");
     let playTimer = null;
